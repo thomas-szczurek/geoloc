@@ -8,6 +8,7 @@ from qgis.core import *
 from qgis.utils import iface
 from qgis.gui import QgsMessageBar
 from PyQt5.QtWidgets import QFileDialog
+from Levenshtein import distance
 
 # Fonction servant à supprimer les accents d'un texte
 def suppr_accents(chaine):
@@ -52,7 +53,25 @@ def key_dico(dico, chaine):
                 return key
             else:
                 pass
-                
+
+# Fonction vérifiant la présence dans une chaine de texte de mots présent dans un dico et renvois sa clef, vérifie l'ensemble des valeurs
+def key_dico_cont(dico, chaine):
+    leven = 99
+    key_valid = ""
+    for key, value in dico.items():
+        for i, elements in enumerate(value):
+            word_checked = value[i]
+            if (word_checked in chaine) == True:
+                if distance(word_checked, adresse) < leven:
+                    key_valid = key
+                    leven = distance(word_checked, adresse)
+                else:
+                    pass
+            else:
+                pass
+            continue
+    return key_valid
+
  # Fonction vérifiant la présence dans une chaine de texte de mots présent dans une liste
 def check_list(liste, chaine):
     for i, elements in enumerate(liste):
@@ -178,10 +197,10 @@ for ident_s, adresse_s in adresses_file.items():
             type_true = key_dico(type_voie, adresse)
         # Détection du nom de voie
         nom_true = "non ident"
-        if key_dico(nom_voie, adresse) is None:
+        if key_dico_cont(nom_voie, adresse) is None:
             pass
         else:
-            nom_true = key_dico(nom_voie, adresse)
+            nom_true = key_dico_cont(nom_voie, adresse)
         if nom_true == "GHESQUIERES" and commune_true == "HELLEMMES":
             nom_true = "HENRI GHESQUIERES"
         else:
@@ -192,12 +211,6 @@ for ident_s, adresse_s in adresses_file.items():
             pass
         if nom_true == "GHESQUIERES" and commune_true == "LILLE":
             nom_true = "VIRGINIE GHESQUIERE"
-        else:
-            pass
-        if nom_true == "ALBERT" and commune_true == "LOMME" and ("THOMAS" in adresse):
-            nom_true = "ALBERT THOMAS"
-        elif nom_true == "ALBERT" and commune_true == "LOMME" and ("CAMUS" in adresse):
-            nom_true = "ALBERT CAMUS"
         else:
             pass
         if nom_true == "DELESALLE" and commune_true == "HELLEMMES":
@@ -216,46 +229,6 @@ for ident_s, adresse_s in adresses_file.items():
             nom_true = "DU MARAIS"
         else:
             pass
-        if nom_true == "ALBERT" and ("THOMAS" in adresse):
-            nom_true = "ALBERT THOMAS"
-        else:
-            pass
-        if nom_true == "FERRER" and (("FRANCESCO" in adresse) or ("FRANCISCO" in adresse)):
-            nom_true = "FRANCISCO FERRER"
-        else:
-            pass
-        if nom_true == "LEGRAND" and ("PIERRE" in adresse):
-            nom_true = "PIERRE LEGRAND"
-        else:
-            pass
-        if nom_true == "LEGRAND" and ("GERY" in adresse):
-            nom_true = "GERY LEGRAND"
-        else:
-            pass
-        if nom_true == "DU TEMPLE" and ("HAYE" in adresse):
-            nom_true = "DE LA HAYE DU TEMPLE"
-        else:
-            pass
-        if nom_true == "ADOLPHE" and ("CASSE" in adresse):
-            nom_true = "ADOLPHE CASSE"
-        else:
-            pass
-        if nom_true == "LEROUX" and ("FAUQUEMONT" in adresse):
-            nom_true = "LEROUX DE FAUQUEMONT"
-        else:
-            pass
-        if nom_true == "LEFEBVRE" and ("JULES" in adresse):
-            nom_true = "JULES LEFEBVRE"
-        else:
-            pass
-        if nom_true == "SAINT LOUIS" and ("EGLISE" in adresse):
-            nom_true = "DE L EGLISE-SAINT-LOUIS"
-        else:
-            pass
-        if nom_true == "DES JARDINS" and ("CAULIER" in adresse):
-            nom_true = "DES JARDINS CAULIER"
-        else:
-            pass    
         if nom_true == "DU PONT NEUF" and ("RUE" in adresse):
             type_true = "RUE"
         elif nom_true == "DU PONT NEUF" and ("SQUARE" in adresse):
@@ -276,58 +249,6 @@ for ident_s, adresse_s in adresses_file.items():
             pass
         if nom_true == "DU PONT A FOURCHON":
             type_true = "RUE"
-        else:
-            pass
-        if nom_true == "ANDRE" and ("SAINT" in adresse):
-            nom_true = "SAINT ANDRE"
-        else:
-            pass
-        if nom_true == "ANDRE" and ("BASTION" in adresse):
-            nom_true = "BASTION SAINT-ANDRE"
-        else:
-            pass
-        if nom_true == "DES MARTYRS" and ("RESISTANCE" in adresse):
-            nom_true = "DES MARTYRS DE LA RESISTANCE"
-        else:
-            pass
-        if nom_true == "CASTEL" and ("FERME" in adresse):
-            nom_true = "DE LA FERME CASTEL"
-        else:
-            pass
-        if nom_true == "ROUBAIX" and ("FAUBOURG" in adresse):
-            nom_true = "DU FAUBOURG DE ROUBAIX"
-        else:
-            pass
-        if nom_true == "NOTRE DAME" and ("FAUBOURG" in adresse):
-            nom_true = "DU FAUBOURG NOTRE DAME"
-        else:
-            pass
-        if nom_true == "BETHUNE" and ("FAUBOURG" in adresse):
-            nom_true = "DU FAUBOURG DE BETHUNE"
-        else:
-            pass
-        if nom_true == "DE DOUAI" and ("FAUBOURG" in adresse):
-            nom_true = "DU FAUBOURG DE DOUAI"
-        else:
-            pass
-        if nom_true == "DES POSTES" and ("FAUBOURG" in adresse):
-            nom_true = "DU FAUBOURG DES POSTES"
-        else:
-            pass
-        if nom_true == "DE ROUBAIX" and ("FAUBOURG" in adresse):
-            nom_true = "DU FAUBOURG DE ROUBAIX"
-        else:
-            pass
-        if nom_true == "D ARRAS" and ("FAUBOURG" in adresse):
-            nom_true = "DU FAUBOURG D ARRAS"
-        else:
-            pass
-        if nom_true == "LEFEBVRE" and ("HIPPOLYTE" in adresse):
-            nom_true = "HYPPOLITE LEFEBVRE"
-        else:
-            pass
-        if nom_true == "JACQUARD" and commune_true == "LOMME":
-            nom_true = "JACQUART"
         else:
             pass
         # Détection des repetitions
